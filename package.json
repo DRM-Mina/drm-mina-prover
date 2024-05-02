@@ -1,0 +1,21 @@
+{
+    "name": "drm-mina-prover",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "tsc -p tsconfig.json && node --experimental-specifier-resolution=node --no-warnings dist/server.js"
+    },
+    "author": "kadirchan",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^20.12.8",
+        "@types/express": "^4.17.21"
+    },
+    "dependencies": {
+        "drm-mina-chain": "^1.0.0",
+        "express": "^4.19.2",
+        "o1js": "^0.13.1"
+    }
+}
