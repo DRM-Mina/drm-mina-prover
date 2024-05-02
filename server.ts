@@ -35,19 +35,27 @@ app.post("/", async (req, res) => {
     const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
     const drm = client.runtime.resolve("DRM");
-    const tx = await client.transaction(sender, () => {
-        // @ts-ignore
-        drm.createSession(proof);
-    });
 
-    tx.transaction!.nonce = UInt64.from(nonce);
-    tx.transaction = tx.transaction?.sign(senderKey);
-    await tx.send();
+    try {
+        const tx = await client.transaction(sender, () => {
+            // @ts-ignore
+            drm.createSession(proof);
+        });
 
-    console.log("Transaction sent");
-    nonce++;
+        tx.transaction!.nonce = UInt64.from(nonce);
+        tx.transaction = tx.transaction?.sign(senderKey);
+        await tx.send();
 
-    res.status(200).send("Transaction sent");
+        console.log("Transaction sent");
+        nonce++;
+
+        res.status(200).send("Transaction sent");
+    } catch (e) {
+        console.error(e);
+        res.status(500).send("Transaction failed");
+    }
+
+    process.exit(0);
 });
 
 app.listen(4444, () => {
