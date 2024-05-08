@@ -10,11 +10,11 @@
     "author": "kadirchan",
     "license": "ISC",
     "devDependencies": {
-        "@types/node": "^20.12.8",
-        "@types/express": "^4.17.21"
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.12.8"
     },
     "dependencies": {
-        "drm-mina-chain": "^1.0.0",
+        "drm-mina-chain": "^1.1.2",
         "express": "^4.19.2",
         "o1js": "^0.13.1"
     }
