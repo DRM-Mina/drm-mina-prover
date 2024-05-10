@@ -54,8 +54,18 @@ app.post("/", async (req, res) => {
         console.error(e);
         res.status(500).send("Transaction failed");
     }
+});
 
-    process.exit(0);
+app.post("/hash", async (req, res) => {
+    const { rawIdentifiers } = req.body;
+    const identifiers = Identifiers.fromRaw(rawIdentifiers);
+    const hash = identifiers.hash();
+
+    res.status(200).send(hash.toString());
+});
+
+app.get("/enes", async (req, res) => {
+    res.status(200).send("enes");
 });
 
 app.listen(4444, () => {
