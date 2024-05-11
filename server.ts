@@ -24,19 +24,18 @@ app.post("/", async (req, res) => {
         res.status(500).send("DeviceSession not compiled yet");
         return;
     }
-
-    const { rawIdentifiers, currentSession, newSession, gameId } = req.body;
-    const identifiers = Identifiers.fromRaw(rawIdentifiers);
-    const publicInput = new DeviceSessionInput({
-        gameId: UInt64.from(gameId),
-        currentSessionKey: UInt64.from(currentSession),
-        newSessionKey: UInt64.from(newSession),
-    });
-    const proof = await DeviceSession.proofForSession(publicInput, identifiers);
-
-    const drm = client.runtime.resolve("DRM");
-
     try {
+        const { rawIdentifiers, currentSession, newSession, gameId } = req.body;
+        const identifiers = Identifiers.fromRaw(rawIdentifiers);
+        const publicInput = new DeviceSessionInput({
+            gameId: UInt64.from(gameId),
+            currentSessionKey: UInt64.from(currentSession),
+            newSessionKey: UInt64.from(newSession),
+        });
+        const proof = await DeviceSession.proofForSession(publicInput, identifiers);
+
+        const drm = client.runtime.resolve("DRM");
+
         const tx = await client.transaction(sender, () => {
             // @ts-ignore
             drm.createSession(proof);
@@ -57,15 +56,16 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/hash", async (req, res) => {
-    const { rawIdentifiers } = req.body;
-    const identifiers = Identifiers.fromRaw(rawIdentifiers);
-    const hash = identifiers.hash();
+    try {
+        const { rawIdentifiers } = req.body;
+        const identifiers = Identifiers.fromRaw(rawIdentifiers);
+        const hash = identifiers.hash();
 
-    res.status(200).send(hash.toString());
-});
-
-app.get("/enes", async (req, res) => {
-    res.status(200).send("enes");
+        res.status(200).send(hash.toString());
+    } catch (e) {
+        console.error(e);
+        res.status(500).send("Hash failed");
+    }
 });
 
 app.listen(4444, () => {
