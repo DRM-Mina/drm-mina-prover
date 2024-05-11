@@ -32,7 +32,10 @@ app.post("/", async (req, res) => {
             currentSessionKey: UInt64.from(currentSession),
             newSessionKey: UInt64.from(newSession),
         });
-        const proof = await DeviceSession.proofForSession(publicInput, identifiers);
+        const proof = await DeviceSession.proofForSession(
+            publicInput,
+            identifiers
+        );
 
         const drm = client.runtime.resolve("DRM");
 
@@ -58,7 +61,8 @@ app.post("/", async (req, res) => {
 app.post("/hash", async (req, res) => {
     try {
         const { rawIdentifiers } = req.body;
-        const identifiers = Identifiers.fromRaw(rawIdentifiers);
+        const rawIdentifiersParsed = JSON.parse(rawIdentifiers);
+        const identifiers = Identifiers.fromRaw(rawIdentifiersParsed);
         const hash = identifiers.hash();
 
         res.status(200).send(hash.toString());
