@@ -21,7 +21,7 @@ app.use(express.json());
 
 app.post("/", async (req, res) => {
     if (!isCompiled) {
-        res.status(500).send("DeviceSession not compiled yet");
+        res.status(102).send("DeviceSession not compiled yet");
         return;
     }
     try {
@@ -58,19 +58,19 @@ app.post("/", async (req, res) => {
     }
 });
 
-app.post("/hash", async (req, res) => {
-    try {
-        const { rawIdentifiers } = req.body;
-        const rawIdentifiersParsed = JSON.parse(rawIdentifiers);
-        const identifiers = Identifiers.fromRaw(rawIdentifiersParsed);
-        const hash = identifiers.hash();
+// app.post("/hash", async (req, res) => {
+//     try {
+//         const { rawIdentifiers } = req.body;
+//         const rawIdentifiersParsed = JSON.parse(rawIdentifiers);
+//         const identifiers = Identifiers.fromRaw(rawIdentifiersParsed);
+//         const hash = identifiers.hash();
 
-        res.status(200).send(hash.toString());
-    } catch (e) {
-        console.error(e);
-        res.status(500).send("Hash failed");
-    }
-});
+//         res.status(200).send(hash.toString());
+//     } catch (e) {
+//         console.error(e);
+//         res.status(500).send("Hash failed");
+//     }
+// });
 
 app.listen(4444, () => {
     console.log("Server started on port 4444");
