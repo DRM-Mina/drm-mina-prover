@@ -32,10 +32,7 @@ app.post("/", async (req, res) => {
             currentSessionKey: UInt64.from(currentSession),
             newSessionKey: UInt64.from(newSession),
         });
-        const proof = await DeviceSession.proofForSession(
-            publicInput,
-            identifiers
-        );
+        const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
         const drm = client.runtime.resolve("DRM");
 
@@ -57,20 +54,6 @@ app.post("/", async (req, res) => {
         res.status(500).send("Transaction failed");
     }
 });
-
-// app.post("/hash", async (req, res) => {
-//     try {
-//         const { rawIdentifiers } = req.body;
-//         const rawIdentifiersParsed = JSON.parse(rawIdentifiers);
-//         const identifiers = Identifiers.fromRaw(rawIdentifiersParsed);
-//         const hash = identifiers.hash();
-
-//         res.status(200).send(hash.toString());
-//     } catch (e) {
-//         console.error(e);
-//         res.status(500).send("Hash failed");
-//     }
-// });
 
 app.listen(4444, () => {
     console.log("Server started on port 4444");
