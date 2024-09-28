@@ -1,16 +1,13 @@
+import { DeviceSession, DeviceSessionInput, Identifiers } from "drm-mina-contracts";
 import express from "express";
-import { DeviceSession, DeviceSessionInput } from "./prover";
-import { Identifiers } from "./identifiers";
-import { PrivateKey, UInt64 } from "o1js";
-import { client } from "drm-mina-chain";
+import { UInt64 } from "o1js";
+
+const apiEndpoint =
+    process.env.NODE_ENV === "production" ? "https://drm-mina.com" : "http://localhost:3333/";
 
 let isCompiled = false;
-const senderKey = PrivateKey.random();
-const sender = senderKey.toPublicKey();
-let nonce = 0;
 (async () => {
     console.log("Compiling DeviceSession");
-    await client.start();
     await DeviceSession.compile();
     isCompiled = true;
     console.log("DeviceSession compiled");
@@ -34,20 +31,19 @@ app.post("/", async (req, res) => {
         });
         const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
-        const drm = client.runtime.resolve("DRM");
-
-        const tx = await client.transaction(sender, () => {
-            // @ts-ignore
-            drm.createSession(proof);
+        const response = await fetch(`${apiEndpoint}/submit-session`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                proof: JSON.stringify(proof.toJSON()),
+            }),
         });
 
-        tx.transaction!.nonce = UInt64.from(nonce);
-        tx.transaction = tx.transaction?.sign(senderKey);
-        await tx.send();
-
-        console.log("Transaction sent");
-        nonce++;
-
+        if (!response.ok) {
+            throw new Error(`Failed to submit session: ${response.status}`);
+        }
         res.status(200).send("Transaction sent");
     } catch (e) {
         console.error(e);
