@@ -5,8 +5,9 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "tsc -p tsconfig.json && NODE_ENV=production node --experimental-specifier-resolution=node --no-warnings dist/server.js",
-        "dev": "tsc -p tsconfig.json && NODE_ENV=development node --experimental-specifier-resolution=node dist/server.js"
+        "build": "tsc -p tsconfig.json",
+        "start": "tsc -p tsconfig.json && NODE_ENV=production node --experimental-specifier-resolution=node --no-warnings dist/server.js B62qpLCezHwRw7jUBLhi17pqnQdszUsqNFAFrg7oiF4ENVjEeiAhdyM B62qmyQSLq5ehNqD6Fb8f1uyZHKPhBvQpKCPGYz7EDkZ2qgvtxXcGtG",
+        "dev": "tsc -p tsconfig.json && NODE_ENV=development node --experimental-specifier-resolution=node dist/server.js B62qpLCezHwRw7jUBLhi17pqnQdszUsqNFAFrg7oiF4ENVjEeiAhdyM B62qmyQSLq5ehNqD6Fb8f1uyZHKPhBvQpKCPGYz7EDkZ2qgvtxXcGtG"
     },
     "author": "kadirchan",
     "license": "ISC",
@@ -15,7 +16,7 @@
         "@types/node": "^20.12.8"
     },
     "dependencies": {
-        "drm-mina-contracts": "^0.3.5",
+        "drm-mina-contracts": "^0.3.6",
         "express": "^4.19.2",
         "o1js": "^1.8.0"
     }
