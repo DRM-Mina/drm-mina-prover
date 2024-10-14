@@ -16,6 +16,7 @@
         "@types/node": "^20.12.8"
     },
     "dependencies": {
+        "axios": "^1.7.7",
         "drm-mina-contracts": "^0.3.6",
         "express": "^4.19.2",
         "o1js": "^1.8.0"

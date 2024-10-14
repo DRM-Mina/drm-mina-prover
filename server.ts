@@ -1,3 +1,4 @@
+import axios from "axios";
 import { DRM, offchainState } from "drm-mina-contracts/build/src/DRM.js";
 import { Identifiers } from "drm-mina-contracts/build/src/lib/DeviceIdentifier.js";
 import {
@@ -66,19 +67,15 @@ app.post("/", async (req, res) => {
         });
         const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
-        const response = await fetch(`${apiEndpoint}/submit-session`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                proof: JSON.stringify(proof.toJSON()),
-            }),
+        console.log("Proof generated");
+        const response = await axios.post("http://localhost:3333/submit-session", {
+            proof: JSON.stringify(proof.toJSON()),
         });
 
-        if (!response.ok) {
+        if (response.status !== 200) {
             throw new Error(`Failed to submit session: ${response.status}`);
         }
+
         res.status(200).send("Transaction sent");
     } catch (e) {
         console.error(e);
