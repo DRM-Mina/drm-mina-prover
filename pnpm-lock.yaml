@@ -12,14 +12,14 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       drm-mina-contracts:
-        specifier: ^0.3.6
-        version: 0.3.6(o1js@1.8.0)
+        specifier: ^0.3.7
+        version: 0.3.7(o1js@1.9.0)
       express:
         specifier: ^4.19.2
         version: 4.21.0
       o1js:
-        specifier: ^1.8.0
-        version: 1.8.0
+        specifier: ^1.9.0
+        version: 1.9.0
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -142,11 +142,11 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  drm-mina-contracts@0.3.6:
-    resolution: {integrity: sha512-DCwR9S3xWHX8nhHMDCkRgASJvSI1OBFXYZ5PDJ/ATqFf2c40IzsmZzhjrQZNio/JoXI9onde3oL5Rf2JzJGCEg==}
+  drm-mina-contracts@0.3.7:
+    resolution: {integrity: sha512-gup6zT0DZkWICV07tJ0oTE2Pk4Spdz9F0JnGquBEGLy/LhrSgJNkjRp4SgI2Dqcf9E3B9lnig8DpnvH82vExcQ==}
     engines: {node: '>=18.14.0'}
     peerDependencies:
-      o1js: ^1.8
+      o1js: ^1.9
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -292,8 +292,8 @@ packages:
       encoding:
         optional: true
 
-  o1js@1.8.0:
-    resolution: {integrity: sha512-mN0aM4HW3kyl/Gx0irqKQSQ2JftbmsK2t5nSZpTuNgTOVl0wQ6KZumXXps6E5hGkCjRfk+FjlL7CBsmqKqzYzg==}
+  o1js@1.9.0:
+    resolution: {integrity: sha512-EbwrBtG9rZZ4hlg/qEB6bNQOE98WkpZ5hVxWvafbzZscDLE4CzY+F5KKF1+Ka8jhEJj6WDeEqT12acyvlYSa1w==}
     engines: {node: '>=18.14.0'}
     hasBin: true
 
@@ -529,10 +529,10 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  drm-mina-contracts@0.3.6(o1js@1.8.0):
+  drm-mina-contracts@0.3.7(o1js@1.9.0):
     dependencies:
       dotenv: 16.4.5
-      o1js: 1.8.0
+      o1js: 1.9.0
 
   ee-first@1.1.1: {}
 
@@ -685,7 +685,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  o1js@1.8.0:
+  o1js@1.9.0:
     dependencies:
       blakejs: 1.2.1
       cachedir: 2.4.0

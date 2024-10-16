@@ -17,8 +17,8 @@
     },
     "dependencies": {
         "axios": "^1.7.7",
-        "drm-mina-contracts": "^0.3.6",
+        "drm-mina-contracts": "^0.3.7",
         "express": "^4.19.2",
-        "o1js": "^1.8.0"
+        "o1js": "^1.9.0"
     }
 }
