@@ -8,9 +8,6 @@ import {
 import express from "express";
 import { fetchAccount, Field, Mina, PublicKey, UInt64 } from "o1js";
 
-const apiEndpoint =
-    process.env.NODE_ENV === "production" ? "https://drm-mina.com" : "http://localhost:3333/";
-
 const drmAddress = process.argv[2];
 const gameTokenAddress = process.argv[3];
 
@@ -28,6 +25,7 @@ if (!gameTokenAddress) {
 
 let isDeviceSessionCompiled = false;
 let isOffChainStateCompiled = false;
+let drmInstance: DRM | undefined;
 
 (async () => {
     console.time("Compiling DeviceSession");
@@ -42,8 +40,8 @@ let isOffChainStateCompiled = false;
     Mina.setActiveInstance(Network);
 
     console.time("Compile OffchainState");
-    const drmInstance = new DRM(PublicKey.fromBase58(drmAddress));
-    offchainState.setContractInstance(drmInstance);
+    drmInstance = new DRM(PublicKey.fromBase58(drmAddress));
+    drmInstance.offchainState.setContractInstance(drmInstance);
     await offchainState.compile();
     isOffChainStateCompiled = true;
     console.timeEnd("Compile OffchainState");
@@ -59,16 +57,18 @@ app.post("/", async (req, res) => {
     }
     try {
         const { rawIdentifiers, currentSession, newSession } = req.body;
+        console.log(rawIdentifiers, currentSession, newSession);
         const identifiers = Identifiers.fromRaw(rawIdentifiers);
         const publicInput = new DeviceSessionInput({
             gameToken: PublicKey.fromBase58(gameTokenAddress),
             currentSessionKey: UInt64.from(currentSession),
             newSessionKey: UInt64.from(newSession),
         });
+        console.log("Generating proof");
         const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
         console.log("Proof generated");
-        const response = await axios.post("http://localhost:3333/submit-session", {
+        const response = await axios.post("http://api_drmmina.kadircan.org/submit-session", {
             proof: JSON.stringify(proof.toJSON()),
         });
 
@@ -76,10 +76,11 @@ app.post("/", async (req, res) => {
             throw new Error(`Failed to submit session: ${response.status}`);
         }
 
-        res.status(200).send("Transaction sent");
+        console.log("Transaction sent");
+        return res.status(200).send("Transaction sent");
     } catch (e) {
         console.error(e);
-        res.status(500).send("Transaction failed");
+        return res.status(500).send("Transaction failed");
     }
 });
 
@@ -98,9 +99,9 @@ app.post("/current-session", async (req, res) => {
             publicKey: PublicKey.fromBase58(drmAddress),
         });
 
-        await Mina.fetchActions(PublicKey.fromBase58(drmAddress));
-
-        const currentSession = await offchainState.fields.sessions.get(Field.from(deviceHash));
+        const currentSession = await drmInstance!.offchainState.fields.sessions.get(
+            Field.from(deviceHash)
+        );
         if (!currentSession.isSome.toBoolean()) {
             console.log("Current session not found");
             res.status(200).send({ currentSession: 0 });
@@ -111,6 +112,7 @@ app.post("/current-session", async (req, res) => {
     } catch (e) {
         console.error(e);
         res.status(500).send("Transaction failed");
+        return;
     }
 });
 

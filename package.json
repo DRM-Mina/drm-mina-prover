@@ -6,8 +6,8 @@
     "type": "module",
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "start": "tsc -p tsconfig.json && NODE_ENV=production node --experimental-specifier-resolution=node --no-warnings dist/server.js B62qpLCezHwRw7jUBLhi17pqnQdszUsqNFAFrg7oiF4ENVjEeiAhdyM B62qmyQSLq5ehNqD6Fb8f1uyZHKPhBvQpKCPGYz7EDkZ2qgvtxXcGtG",
-        "dev": "tsc -p tsconfig.json && NODE_ENV=development node --experimental-specifier-resolution=node dist/server.js B62qpLCezHwRw7jUBLhi17pqnQdszUsqNFAFrg7oiF4ENVjEeiAhdyM B62qmyQSLq5ehNqD6Fb8f1uyZHKPhBvQpKCPGYz7EDkZ2qgvtxXcGtG"
+        "start": "tsc -p tsconfig.json && NODE_ENV=production node --experimental-specifier-resolution=node --no-warnings dist/server.js B62qmRpcfka2rcHpueg938hnFsZQ6RHf67hDuCQQ4PZE2dqgGfLyhiT B62qoCf7aTcRyTp5gE2ctjEzimEoET6o6YauCMN3Wog4QSEQGpRhVCs",
+        "dev": "tsc -p tsconfig.json && NODE_ENV=development node --experimental-specifier-resolution=node dist/server.js B62qmRpcfka2rcHpueg938hnFsZQ6RHf67hDuCQQ4PZE2dqgGfLyhiT B62qoCf7aTcRyTp5gE2ctjEzimEoET6o6YauCMN3Wog4QSEQGpRhVCs"
     },
     "author": "kadirchan",
     "license": "ISC",
@@ -17,8 +17,8 @@
     },
     "dependencies": {
         "axios": "^1.7.7",
-        "drm-mina-contracts": "^0.3.7",
+        "drm-mina-contracts": "^0.4",
         "express": "^4.19.2",
-        "o1js": "^1.9.0"
+        "o1js": "^1.9"
     }
 }
