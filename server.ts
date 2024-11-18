@@ -1,51 +1,52 @@
-import axios from "axios";
 import { DRM, offchainState } from "drm-mina-contracts/build/src/DRM.js";
 import { Identifiers } from "drm-mina-contracts/build/src/lib/DeviceIdentifier.js";
 import {
     DeviceSession,
     DeviceSessionInput,
 } from "drm-mina-contracts/build/src/lib/DeviceSessionProof.js";
-import express from "express";
+
 import { fetchAccount, Field, Mina, PublicKey, UInt64 } from "o1js";
 
-const drmAddress = process.argv[2];
-const gameTokenAddress = process.argv[3];
+import axios from "axios";
+import express from "express";
 
-console.log("DRM address", drmAddress);
-console.log("Game token address", gameTokenAddress);
-if (!drmAddress) {
-    console.error("DRM address is required");
-    process.exit(1);
-}
-
-if (!gameTokenAddress) {
-    console.error("Game token address is required");
-    process.exit(1);
-}
+let drmAddress: PublicKey | undefined;
+let gameTokenAddress: PublicKey | undefined;
 
 let isDeviceSessionCompiled = false;
 let isOffChainStateCompiled = false;
 let drmInstance: DRM | undefined;
 
-(async () => {
-    console.time("Compiling DeviceSession");
-    await DeviceSession.compile();
-    isDeviceSessionCompiled = true;
-    console.timeEnd("Compiling DeviceSession");
-
+const setMinaNetwork = () => {
     const Network = Mina.Network({
         mina: "https://api.minascan.io/node/devnet/v1/graphql",
         archive: "https://api.minascan.io/archive/devnet/v1/graphql",
     });
     Mina.setActiveInstance(Network);
+};
 
-    console.time("Compile OffchainState");
-    drmInstance = new DRM(PublicKey.fromBase58(drmAddress));
-    drmInstance.offchainState.setContractInstance(drmInstance);
+const compilePrograms = async () => {
+    console.time("Compiling DeviceSession");
+    await DeviceSession.compile();
+    isDeviceSessionCompiled = true;
+    console.timeEnd("Compiling DeviceSession");
+
+    console.time("Compiling OffchainState");
     await offchainState.compile();
     isOffChainStateCompiled = true;
-    console.timeEnd("Compile OffchainState");
-})();
+    console.timeEnd("Compiling OffchainState");
+};
+
+const setDRMInstance = () => {
+    if (!drmAddress) {
+        throw new Error("DRM address is required");
+    }
+    drmInstance = new DRM(drmAddress);
+    drmInstance.offchainState.setContractInstance(drmInstance);
+};
+
+setMinaNetwork();
+compilePrograms();
 
 const app = express();
 app.use(express.json());
@@ -55,20 +56,23 @@ app.post("/", async (req, res) => {
         res.status(102).send("DeviceSession not compiled yet");
         return;
     }
+    if (!gameTokenAddress) {
+        res.status(400).send("Game token address not set yet");
+        return;
+    }
     try {
         const { rawIdentifiers, currentSession, newSession } = req.body;
-        console.log(rawIdentifiers, currentSession, newSession);
+        console.log(currentSession, " -> ", newSession);
         const identifiers = Identifiers.fromRaw(rawIdentifiers);
         const publicInput = new DeviceSessionInput({
-            gameToken: PublicKey.fromBase58(gameTokenAddress),
+            gameToken: gameTokenAddress,
             currentSessionKey: UInt64.from(currentSession),
             newSessionKey: UInt64.from(newSession),
         });
         console.log("Generating proof");
         const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
-        console.log("Proof generated");
-        const response = await axios.post("http://api_drmmina.kadircan.org/submit-session", {
+        const response = await axios.post("http://api.drmmina.com/submit-session", {
             proof: JSON.stringify(proof.toJSON()),
         });
 
@@ -84,9 +88,53 @@ app.post("/", async (req, res) => {
     }
 });
 
+app.post("/set-address", async (req, res) => {
+    try {
+        const { drmAddressB58, gameTokenAddressB58 } = req.body;
+        console.log("DRM address", drmAddressB58);
+        console.log("Game token address", gameTokenAddressB58);
+
+        if (!drmAddressB58) {
+            console.error("DRM address is required");
+            res.status(400).send("DRM address is required");
+            return;
+        }
+
+        if (!gameTokenAddressB58) {
+            console.error("Game token address is required");
+            res.status(400).send("Game token address is required");
+            return;
+        }
+
+        try {
+            drmAddress = PublicKey.fromBase58(drmAddressB58);
+            gameTokenAddress = PublicKey.fromBase58(gameTokenAddressB58);
+        } catch (e) {
+            console.error(e);
+            res.status(400).send("Invalid address");
+            return;
+        }
+
+        setDRMInstance();
+        res.status(200).send("Address set successfully");
+        return;
+    } catch (e) {
+        console.error(e);
+        res.status(500).send("Address setting failed");
+    }
+});
+
 app.post("/current-session", async (req, res) => {
     if (!isOffChainStateCompiled) {
         res.status(102).send("OffChainState not compiled yet");
+        return;
+    }
+    if (!drmAddress) {
+        res.status(400).send("DRM address not set yet");
+        return;
+    }
+    if (!drmInstance) {
+        res.status(400).send("DRM instance not set yet");
         return;
     }
 
@@ -96,7 +144,7 @@ app.post("/current-session", async (req, res) => {
         console.log(deviceHash);
 
         await fetchAccount({
-            publicKey: PublicKey.fromBase58(drmAddress),
+            publicKey: drmAddress,
         });
 
         const currentSession = await drmInstance!.offchainState.fields.sessions.get(
@@ -111,7 +159,7 @@ app.post("/current-session", async (req, res) => {
         }
     } catch (e) {
         console.error(e);
-        res.status(500).send("Transaction failed");
+        res.status(500).send("Current session fetch failed");
         return;
     }
 });
