@@ -2,7 +2,7 @@
     "name": "drm-mina-prover",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "server.js",
     "type": "module",
     "scripts": {
         "build": "tsc -p tsconfig.json",
@@ -12,13 +12,14 @@
     "author": "kadirchan",
     "license": "ISC",
     "devDependencies": {
+        "typescript": "^5.6",
         "@types/express": "^4.17.21",
         "@types/node": "^20.12.8"
     },
     "dependencies": {
         "axios": "^1.7.7",
-        "drm-mina-contracts": "^0.4",
+        "drm-mina-contracts": "^0.5",
         "express": "^4.19.2",
-        "o1js": "^1.9"
+        "o1js": "https://pkg.pr.new/o1-labs/o1js@fc16ce3"
     }
 }
