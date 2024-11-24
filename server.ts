@@ -73,7 +73,7 @@ app.post("/", async (req, res) => {
         const proof = await DeviceSession.proofForSession(publicInput, identifiers);
 
         const response = await axios.post("http://api.drmmina.com/submit-session", {
-            proof: JSON.stringify(proof.toJSON()),
+            proof: JSON.stringify(proof.proof.toJSON()),
         });
 
         if (response.status !== 200) {

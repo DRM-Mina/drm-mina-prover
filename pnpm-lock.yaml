@@ -12,14 +12,14 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       drm-mina-contracts:
-        specifier: ^0.5
-        version: 0.5.0
+        specifier: ^0.6
+        version: 0.6.1
       express:
         specifier: ^4.19.2
         version: 4.21.0
       o1js:
-        specifier: https://pkg.pr.new/o1-labs/o1js@fc16ce3
-        version: https://pkg.pr.new/o1-labs/o1js@fc16ce3
+        specifier: ^2
+        version: 2.1.0
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -145,8 +145,8 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  drm-mina-contracts@0.5.0:
-    resolution: {integrity: sha512-MrWh2nI/zr3UoT0XUHHd/FXfWh+nu26L5jFYrzIaO3Q9cLr7IsWhOBuBPDs/Ghl0ck6llcIBLEBD1Rtcl+rkFA==}
+  drm-mina-contracts@0.6.1:
+    resolution: {integrity: sha512-XAkm+wf+0QLdC7iDcbiQJd4LrTcHV8lF25iOZvBnwDEzid9crIMBQyTRhLw2DDRIO/tVDHJg4lLSWg/cpEgkGQ==}
     engines: {node: '>=18.14.0'}
 
   ee-first@1.1.1:
@@ -293,9 +293,8 @@ packages:
       encoding:
         optional: true
 
-  o1js@https://pkg.pr.new/o1-labs/o1js@fc16ce3:
-    resolution: {tarball: https://pkg.pr.new/o1-labs/o1js@fc16ce3}
-    version: 1.9.0
+  o1js@2.1.0:
+    resolution: {integrity: sha512-d3S4ouWHlzne86gVCiMWp+jELqsNdIAzSCzV5QLqK2hyhTclHXDENivzlP/RZ44EEns/CaI7LHuwbovCPMhaCw==}
     engines: {node: '>=18.14.0'}
     hasBin: true
 
@@ -536,10 +535,10 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  drm-mina-contracts@0.5.0:
+  drm-mina-contracts@0.6.1:
     dependencies:
       dotenv: 16.4.5
-      o1js: https://pkg.pr.new/o1-labs/o1js@fc16ce3
+      o1js: 2.1.0
     transitivePeerDependencies:
       - encoding
 
@@ -694,7 +693,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  o1js@https://pkg.pr.new/o1-labs/o1js@fc16ce3:
+  o1js@2.1.0:
     dependencies:
       blakejs: 1.2.1
       cachedir: 2.4.0
