@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
@@ -8,6 +8,6 @@ COPY . .
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-EXPOSE 4444
+EXPOSE 4444:4444
 
 CMD ["pnpm", "start"]
